@@ -5,7 +5,11 @@
   margin: 0;
   padding: 0;
 }
-
+.active{
+  background-color: #000;
+  color: red;
+  text-decoration: none;
+}
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #202142;
@@ -166,6 +170,10 @@ input:focus {
 .btn:hover {
   transform: scale(0.98);
   opacity: 0.9;
+  -webkit-transform: scale(0.98);
+  -moz-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  -o-transform: scale(0.98);
 }
 
 .btn:disabled {
