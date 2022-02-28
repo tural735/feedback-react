@@ -1,5 +1,4 @@
 import { createContext,useState,useEffect } from "react";
-import {v4 as uuidv4} from 'uuid'
 // import data from '../data/feedback';
 const FeedbackContext=createContext();
 
@@ -17,7 +16,7 @@ export const FeedbackProvider=({children})=>{
     },[])
 
     const fetchFeedback= async()=>{
-        const response= await fetch(`http://localhost:5000/feedback?_sort=id&_order=desc`);
+        const response= await fetch(`/feedback?_sort=id&_order=desc`);
         const data= await response.json();
         setFeedback(data);
         setIsLoading(false);
@@ -30,24 +29,40 @@ export const FeedbackProvider=({children})=>{
         })
     }
     // updateFeedback
-    const updateFeedback=(id,updItem)=>{
+    const updateFeedback= async (id,updItem)=>{
+        const response= await fetch(`/feedback/${id}`,{
+            method:'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(updItem)
+        })
+        const data= await response.json();
         setFeedback(
-            feedback.map((item)=>(item.id ===id ? {...item,...updItem} : item))
+            feedback.map((item)=>(item.id ===id ? {...item,...data} : item))
         )
     }
     // delete Feedback
-    const deleteFeedback=(id)=>{
+    const deleteFeedback= async (id)=>{
         if(window.confirm('Are sure delete?')){
+            await fetch(`/feedback/${id}`,{method: 'DELETE'})
           setFeedback(feedback.filter(item=> item.id !== id))
         }
         console.log('App.js',id);
     }
 
     // add Feedback
-    const addFeedBack=(newFeedback)=>{
+    const addFeedBack= async (newFeedback)=>{
+        const response= await fetch(`/feedback`,{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(newFeedback)
+        })
+        const data=await response.json()
         // console.log(feedback);
-        newFeedback.id=uuidv4;
-        setFeedback([ newFeedback ,...feedback]);
+        setFeedback([ data ,...feedback]);
       }
     return (
         <FeedbackContext.Provider value={{
